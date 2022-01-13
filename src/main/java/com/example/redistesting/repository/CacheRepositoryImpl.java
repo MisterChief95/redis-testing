@@ -35,7 +35,12 @@ public final class CacheRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public CompletionStage<Boolean> set(User user) {
+    public CompletionStage<Boolean> create(User user) {
+        return update(user);
+    }
+
+    @Override
+    public CompletionStage<Boolean> update(User user) {
         return commands.hset(USER_SET_KEY, user.getId(), user);
     }
 
