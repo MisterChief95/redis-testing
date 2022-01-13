@@ -3,34 +3,57 @@ package com.example.redistesting.model;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 @JsonDeserialize(builder = User.Builder.class)
 public class User {
+    private final InetAddress ipv4;
+    private final String firstName;
     private final String id;
-    private final String name;
+    private final String lastName;
     private final int age;
 
     private User(User.Builder builder){
-        this.id = builder.id;
-        this.name = builder.name;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
         this.age = builder.age;
+
+        try {
+            this.ipv4 = Inet4Address.getByName(builder.ipv4);
+        }catch (Exception ex){
+            throw new RuntimeException("Unable to parse IPv4 String", ex);
+        }
+
+        this.id = String.valueOf((firstName + lastName + age).hashCode());
     }
 
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     public int getAge() {
         return age;
     }
 
+    public InetAddress getIpv4() {
+        return ipv4;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public static final class Builder {
-        private String id;
-        private String name;
+        private String firstName;
+        private String lastName;
+        private String ipv4;
         private int age;
+        private String id;
 
         @JsonSetter("id")
         public Builder withId(String id){
@@ -38,15 +61,27 @@ public class User {
             return this;
         }
 
-        @JsonSetter("name")
-        public Builder withName(String name){
-            this.name = name;
+        @JsonSetter("firstName")
+        public Builder withFirstName(String firstName){
+            this.firstName = firstName;
+            return this;
+        }
+
+        @JsonSetter("lastName")
+        public Builder withLastName(String lastName){
+            this.lastName = lastName;
             return this;
         }
 
         @JsonSetter("age")
         public Builder withAge(int age){
             this.age = age;
+            return this;
+        }
+
+        @JsonSetter("ipv4")
+        public Builder withIPv4(String ipv4){
+            this.ipv4 = ipv4;
             return this;
         }
 
