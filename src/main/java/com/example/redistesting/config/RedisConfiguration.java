@@ -1,6 +1,6 @@
 package com.example.redistesting.config;
 
-import com.example.redistesting.model.LettuceProperties;
+import com.example.redistesting.model.RedisProperties;
 import com.example.redistesting.model.User;
 import com.example.redistesting.util.UserCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,26 +22,26 @@ public class RedisConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "redis.lettuce")
-    public LettuceProperties properties(){
-        return new LettuceProperties();
+    public RedisProperties properties() {
+        return new RedisProperties();
     }
 
     @Bean
-    public RedisURI uri(LettuceProperties lettuceProperties){
+    public RedisURI uri(RedisProperties redisProperties) {
         return RedisURI.builder()
-                .withHost(lettuceProperties.getHost())
-                .withPort(lettuceProperties.getPort())
-                .withTimeout(Duration.ofSeconds(10))
+                .withHost(redisProperties.getHost())
+                .withPort(redisProperties.getPort())
+                .withTimeout(Duration.ofSeconds(5L))
                 .build();
     }
 
     @Bean
-    public RedisClient client(RedisURI uri){
+    public RedisClient client(RedisURI uri) {
         return RedisClient.create(uri);
     }
 
     @Bean
-    public RedisCodec<String, User> codec(ObjectMapper objectMapper){
+    public RedisCodec<String, User> codec(ObjectMapper objectMapper) {
         return new UserCodec(objectMapper);
     }
 
@@ -51,7 +51,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public RedisAsyncCommands<String, User> asyncCommands(StatefulRedisConnection<String, User> connection){
+    public RedisAsyncCommands<String, User> asyncCommands(StatefulRedisConnection<String, User> connection) {
         return connection.async();
     }
 }
