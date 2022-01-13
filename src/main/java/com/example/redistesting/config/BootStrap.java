@@ -3,7 +3,6 @@ package com.example.redistesting.config;
 import com.example.redistesting.contract.CacheRepository;
 import com.example.redistesting.model.User;
 import com.example.redistesting.repository.CacheRepositoryImpl;
-import com.example.redistesting.rest.UserController;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +16,6 @@ public class BootStrap {
     @Bean
     public CacheRepository cacheRepository(RedisAsyncCommands<String, User> commands){
         return new CacheRepositoryImpl(commands);
-    }
-
-    @Bean
-    public UserController userController(CacheRepository cacheRepository){
-        return new UserController(cacheRepository);
     }
 
     @Bean
