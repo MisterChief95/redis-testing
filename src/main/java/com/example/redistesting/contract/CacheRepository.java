@@ -11,12 +11,8 @@ public interface CacheRepository {
 
     CompletionStage<User> getById(String id);
 
-    CompletionStage<Boolean> add(User user);
+    CompletionStage<Boolean> set(User user);
 
-    CompletionStage<Boolean> update(User user);
-
-    CompletionStage<Boolean> exists(User user);
-
-    CompletionStage<Boolean> delete(User user);
+    CompletionStage<Boolean> delete(String id);
 
 }

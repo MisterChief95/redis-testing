@@ -3,16 +3,17 @@ package com.example.redistesting.repository;
 import com.example.redistesting.contract.CacheRepository;
 import com.example.redistesting.model.User;
 import io.lettuce.core.api.async.RedisAsyncCommands;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
-
 public final class CacheRepositoryImpl implements CacheRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheRepositoryImpl.class);
     private static final String USER_SET_KEY = "user_set";
 
     private final RedisAsyncCommands<String, User> commands;
@@ -34,32 +35,18 @@ public final class CacheRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public CompletionStage<Boolean> add(User user) {
-        return exists(user).thenCompose(exists -> (!exists)
-                    ? commands.hset(USER_SET_KEY, user.getId(), user)
-                    : completedFuture(false));
+    public CompletionStage<Boolean> set(User user) {
+        return commands.hset(USER_SET_KEY, user.getId(), user);
     }
 
     @Override
-    public CompletionStage<Boolean> update(User user) {
-        return exists(user).thenCompose(exists -> (exists)
-                ? commands.hset(USER_SET_KEY, user.getId(), user)
-                : completedFuture(false));
-    }
-
-    @Override
-    public CompletionStage<Boolean> exists(User user) {
-        return commands.hexists(USER_SET_KEY, user.getId());
-    }
-
-    @Override
-    public CompletionStage<Boolean> delete(User user) {
-        return commands.hdel(USER_SET_KEY, user.getId())
+    public CompletionStage<Boolean> delete(String id) {
+        return commands.hdel(USER_SET_KEY, id)
                 .thenApply(this::longToBoolean);
     }
 
     private Boolean longToBoolean(Long l){
-        return l == 1;
+        return l >= 1;
     }
 
 }
