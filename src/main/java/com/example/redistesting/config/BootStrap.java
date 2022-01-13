@@ -1,3 +1,4 @@
+/* (C)2022 Brendan Lackey */
 package com.example.redistesting.config;
 
 import com.example.redistesting.contract.CacheRepository;
@@ -13,19 +14,19 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @Import({RedisConfiguration.class, CommonBeans.class})
 public class BootStrap {
 
-    @Bean
-    public CacheRepository cacheRepository(RedisAsyncCommands<String, User> commands){
-        return new CacheRepositoryImpl(commands);
-    }
+  @Bean
+  public CacheRepository cacheRepository(RedisAsyncCommands<String, User> commands) {
+    return new CacheRepositoryImpl(commands);
+  }
 
-    @Bean
-    public CommonsRequestLoggingFilter logFilter() {
-        var filter = new CommonsRequestLoggingFilter();
-        filter.setIncludeQueryString(true);
-        filter.setIncludePayload(true);
-        filter.setMaxPayloadLength(10000);
-        filter.setIncludeHeaders(false);
-        filter.setAfterMessagePrefix("REQUEST DATA : ");
-        return filter;
-    }
+  @Bean
+  public CommonsRequestLoggingFilter logFilter() {
+    var filter = new CommonsRequestLoggingFilter();
+    filter.setIncludeQueryString(true);
+    filter.setIncludePayload(true);
+    filter.setMaxPayloadLength(10000);
+    filter.setIncludeHeaders(false);
+    filter.setAfterMessagePrefix("REQUEST DATA : ");
+    return filter;
+  }
 }
