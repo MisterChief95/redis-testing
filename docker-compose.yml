@@ -1,18 +1,9 @@
-version: "3.7"
+version: "3.9"
 services:
   redis:
-    image: redis
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis/redis.conf:/tmp/redis.conf
-    command: [ "redis-server", "/tmp/redis.conf"]
-    networks:
-      - redis-net
+    image: redis:6.2.5-alpine
 
-  testing-app:
-    container_name: testing_app
+  app:
     depends_on:
       - redis
     build:
@@ -20,9 +11,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    networks:
-      - redis-net
-
-networks:
-  redis-net:
-    driver: bridge
