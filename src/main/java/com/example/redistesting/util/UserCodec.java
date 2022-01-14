@@ -2,21 +2,20 @@
 package com.example.redistesting.util;
 
 import com.example.redistesting.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.codec.RedisCodec;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class UserCodec implements RedisCodec<String, User> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserCodec.class);
 
-  private final ObjectMapper objectMapper;
+  private final UncheckedObjectMapper objectMapper;
 
-  public UserCodec(ObjectMapper objectMapper) {
+  public UserCodec(UncheckedObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
 
@@ -32,11 +31,7 @@ public class UserCodec implements RedisCodec<String, User> {
 
     LOGGER.debug("Value to Decode: {}", new String(bArray));
 
-    try {
-      return objectMapper.readValue(bArray, User.class);
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to decode User from redis", e);
-    }
+    return objectMapper.readValue(bArray, User.class);
   }
 
   @Override
@@ -46,14 +41,8 @@ public class UserCodec implements RedisCodec<String, User> {
 
   @Override
   public ByteBuffer encodeValue(User user) {
-    try {
       var byteBuffer = ByteBuffer.wrap(objectMapper.writeValueAsBytes(user));
-
       LOGGER.debug("Value to Encode: {}", new String(byteBuffer.array()));
-
       return byteBuffer;
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to encode User for redis", e);
-    }
   }
 }

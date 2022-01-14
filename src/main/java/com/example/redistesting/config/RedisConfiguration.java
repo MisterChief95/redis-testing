@@ -3,6 +3,7 @@ package com.example.redistesting.config;
 
 import com.example.redistesting.model.RedisProperties;
 import com.example.redistesting.model.User;
+import com.example.redistesting.util.UncheckedObjectMapper;
 import com.example.redistesting.util.UserCodec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.RedisClient;
@@ -54,7 +55,7 @@ public class RedisConfiguration {
   }
 
   @Bean
-  public RedisCodec<String, User> codec(ObjectMapper objectMapper) {
+  public RedisCodec<String, User> codec(UncheckedObjectMapper objectMapper) {
     return new UserCodec(objectMapper);
   }
 

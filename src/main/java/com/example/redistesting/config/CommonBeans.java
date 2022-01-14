@@ -1,7 +1,7 @@
 /* (C)2022 Brendan Lackey */
 package com.example.redistesting.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.redistesting.util.UncheckedObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class CommonBeans {
 
   @Bean
-  public ObjectMapper objectMapper() {
-    return new ObjectMapper();
+  public UncheckedObjectMapper objectMapper() {
+    return new UncheckedObjectMapper();
   }
 }
