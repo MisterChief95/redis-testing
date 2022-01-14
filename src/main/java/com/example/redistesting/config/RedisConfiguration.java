@@ -8,7 +8,7 @@ import com.example.redistesting.util.UserCodec;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.metrics.MicrometerCommandLatencyRecorder;
 import io.lettuce.core.metrics.MicrometerOptions;
@@ -65,8 +65,8 @@ public class RedisConfiguration {
   }
 
   @Bean
-  public RedisAsyncCommands<String, User> asyncCommands(
+  public RedisReactiveCommands<String, User> asyncCommands(
       StatefulRedisConnection<String, User> connection) {
-    return connection.async();
+    return connection.reactive();
   }
 }
