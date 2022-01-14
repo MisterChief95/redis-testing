@@ -3,15 +3,10 @@ package com.example.redistesting.util;
 
 import com.example.redistesting.model.User;
 import io.lettuce.core.codec.RedisCodec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class UserCodec implements RedisCodec<String, User> {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserCodec.class);
 
   private final UncheckedObjectMapper objectMapper;
 
@@ -28,9 +23,6 @@ public class UserCodec implements RedisCodec<String, User> {
   public User decodeValue(ByteBuffer byteBuffer) {
     var bArray = new byte[byteBuffer.remaining()];
     byteBuffer.get(bArray);
-
-    LOGGER.debug("Value to Decode: {}", new String(bArray));
-
     return objectMapper.readValue(bArray, User.class);
   }
 
@@ -41,8 +33,6 @@ public class UserCodec implements RedisCodec<String, User> {
 
   @Override
   public ByteBuffer encodeValue(User user) {
-      var byteBuffer = ByteBuffer.wrap(objectMapper.writeValueAsBytes(user));
-      LOGGER.debug("Value to Encode: {}", new String(byteBuffer.array()));
-      return byteBuffer;
+    return ByteBuffer.wrap(objectMapper.writeValueAsBytes(user));
   }
 }
