@@ -25,7 +25,7 @@ public class UserHandler {
   public Mono<ServerResponse> getAll(ServerRequest serverRequest) {
     return cacheService
         .getAll()
-        .flatMap(b -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(b))
+        .flatMap(lu -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(lu))
         .switchIfEmpty(ServerResponse.noContent().build())
         .onErrorResume(t -> handleError(t, "Error fetching all Users"));
   }
@@ -33,7 +33,7 @@ public class UserHandler {
   public Mono<ServerResponse> get(ServerRequest serverRequest) {
     return cacheService
         .getById(serverRequest.pathVariable(ID_PATH_VAR))
-        .flatMap(b -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(b))
+        .flatMap(u -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(u))
         .switchIfEmpty(ServerResponse.noContent().build())
         .onErrorResume(t -> handleError(t, "Error fetching User"));
   }
