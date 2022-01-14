@@ -2,6 +2,8 @@ version: "3.9"
 services:
   redis:
     image: redis:6.2.5-alpine
+    networks:
+      - cache
 
   app:
     depends_on:
@@ -11,3 +13,37 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    networks:
+      - metrics
+      - cache
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - metrics
+      - monitoring
+
+
+  grafana:
+    image: grafana/grafana:8.2.6
+    container_name: grafana
+    ports:
+      - "9000:3000"
+    volumes:
+      - ./grafana/provisioning/datasources.yml:/etc/grafana/provisioning/datasources.yml
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitoring
+
+networks:
+  metrics:
+  monitoring:
+  cache:
+
+volumes:
+  grafana-data:

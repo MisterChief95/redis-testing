@@ -10,6 +10,11 @@ import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.metrics.MicrometerCommandLatencyRecorder;
+import io.lettuce.core.metrics.MicrometerOptions;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.DefaultClientResources;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -36,8 +41,16 @@ public class RedisConfiguration {
   }
 
   @Bean
-  public RedisClient client(RedisURI uri) {
-    return RedisClient.create(uri);
+  public ClientResources resources(MeterRegistry meterRegistry) {
+    return DefaultClientResources.builder()
+        .commandLatencyRecorder(
+            new MicrometerCommandLatencyRecorder(meterRegistry, MicrometerOptions.create()))
+        .build();
+  }
+
+  @Bean
+  public RedisClient client(RedisURI uri, ClientResources resources) {
+    return RedisClient.create(resources, uri);
   }
 
   @Bean

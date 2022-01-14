@@ -4,10 +4,9 @@ package com.example.redistesting.repository;
 import com.example.redistesting.contract.CacheRepository;
 import com.example.redistesting.model.User;
 import io.lettuce.core.api.async.RedisAsyncCommands;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,28 +22,28 @@ public final class CacheRepositoryImpl implements CacheRepository {
   }
 
   @Override
-  public CompletionStage<List<User>> getAll() {
-    return commands.hgetall(USER_SET_KEY).thenApply(Map::values).thenApply(ArrayList::new);
+  public CompletableFuture<Collection<User>> getAll() {
+    return commands.hgetall(USER_SET_KEY).thenApply(Map::values).toCompletableFuture();
   }
 
   @Override
-  public CompletionStage<User> getById(String id) {
-    return commands.hget(USER_SET_KEY, id);
+  public CompletableFuture<User> getById(String id) {
+    return commands.hget(USER_SET_KEY, id).toCompletableFuture();
   }
 
   @Override
-  public CompletionStage<Boolean> create(User user) {
+  public CompletableFuture<Boolean> create(User user) {
     return update(user);
   }
 
   @Override
-  public CompletionStage<Boolean> update(User user) {
-    return commands.hset(USER_SET_KEY, user.getId(), user);
+  public CompletableFuture<Boolean> update(User user) {
+    return commands.hset(USER_SET_KEY, user.getId(), user).toCompletableFuture();
   }
 
   @Override
-  public CompletionStage<Boolean> delete(String id) {
-    return commands.hdel(USER_SET_KEY, id).thenApply(this::longToBoolean);
+  public CompletableFuture<Boolean> delete(String id) {
+    return commands.hdel(USER_SET_KEY, id).thenApply(this::longToBoolean).toCompletableFuture();
   }
 
   private Boolean longToBoolean(Long l) {

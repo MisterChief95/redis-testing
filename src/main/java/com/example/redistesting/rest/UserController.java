@@ -2,11 +2,13 @@
 package com.example.redistesting.rest;
 
 import static java.util.Objects.isNull;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import com.example.redistesting.contract.CacheRepository;
 import com.example.redistesting.model.User;
-import java.util.List;
-import java.util.concurrent.CompletionStage;
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
+  @Value("${rest.controller.user.timeout}")
+  private long TIMEOUT = 100L;
+
   private final CacheRepository cacheRepository;
 
   public UserController(CacheRepository cacheRepository) {
@@ -23,39 +28,46 @@ public class UserController {
   }
 
   @GetMapping
-  public CompletionStage<ResponseEntity<List<User>>> getAll() {
-    return cacheRepository.getAll().thenApply(list -> ResponseEntity.ok().body(list));
+  public CompletableFuture<ResponseEntity<Collection<User>>> getAll() {
+    return cacheRepository
+        .getAll()
+        .thenApply(list -> ResponseEntity.ok().body(list))
+        .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
   @GetMapping("/{id}")
-  public CompletionStage<ResponseEntity<User>> get(@PathVariable String id) {
+  public CompletableFuture<ResponseEntity<User>> get(@PathVariable String id) {
     return cacheRepository
         .getById(id)
         .thenApply(
             user ->
                 (!isNull(user))
                     ? ResponseEntity.ok().body(user)
-                    : ResponseEntity.noContent().build());
+                    : new ResponseEntity<>((User) null, HttpStatus.NO_CONTENT))
+        .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public CompletionStage<ResponseEntity<Boolean>> create(@RequestBody User user) {
+  public CompletableFuture<ResponseEntity<Boolean>> create(@RequestBody User user) {
     return cacheRepository
         .create(user)
-        .thenApply(isNewEntry -> new ResponseEntity<>(isNewEntry, HttpStatus.CREATED));
+        .thenApply(isNewEntry -> new ResponseEntity<>(isNewEntry, HttpStatus.CREATED))
+        .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public CompletionStage<ResponseEntity<Boolean>> update(@RequestBody User user) {
+  public CompletableFuture<ResponseEntity<Boolean>> update(@RequestBody User user) {
     return cacheRepository
         .update(user)
-        .thenApply(isNewEntry -> ResponseEntity.accepted().body(isNewEntry));
+        .thenApply(isNewEntry -> ResponseEntity.accepted().body(isNewEntry))
+        .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
   @DeleteMapping("/{id}")
-  public CompletionStage<ResponseEntity<Boolean>> delete(@PathVariable String id) {
+  public CompletableFuture<ResponseEntity<Boolean>> delete(@PathVariable String id) {
     return cacheRepository
         .delete(id)
-        .thenApply(wasDeleted -> ResponseEntity.accepted().body(wasDeleted));
+        .thenApply(wasDeleted -> ResponseEntity.accepted().body(wasDeleted))
+        .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 }
