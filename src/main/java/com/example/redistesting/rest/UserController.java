@@ -43,7 +43,7 @@ public class UserController {
         .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public CompletableFuture<ResponseEntity<Boolean>> create(@RequestBody User user) {
     return cacheRepository
         .create(user)
@@ -51,7 +51,7 @@ public class UserController {
         .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
-  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public CompletableFuture<ResponseEntity<Boolean>> update(@RequestBody User user) {
     return cacheRepository
         .update(user)
@@ -59,7 +59,7 @@ public class UserController {
         .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
-  @DeleteMapping(path = "/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
+  @DeleteMapping(path = "/{id}")
   public CompletableFuture<ResponseEntity<Boolean>> delete(@PathVariable String id) {
     return cacheRepository
         .delete(id)
