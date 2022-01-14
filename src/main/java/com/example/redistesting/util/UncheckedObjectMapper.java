@@ -1,3 +1,4 @@
+/* (C)2022 Brendan Lackey */
 package com.example.redistesting.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,8 @@ public class UncheckedObjectMapper extends ObjectMapper {
     try {
       return super.writeValueAsBytes(value);
     } catch (Exception ex) {
-      throw new RuntimeException("Failed to convert " + value.getClass().getSimpleName() + " to bytes", ex);
+      throw new RuntimeException(
+          "Failed to convert " + value.getClass().getSimpleName() + " to bytes", ex);
     }
   }
 }
