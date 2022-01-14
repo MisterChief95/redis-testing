@@ -3,6 +3,7 @@ package com.example.redistesting.rest;
 
 import com.example.redistesting.contract.CacheService;
 import com.example.redistesting.model.User;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,6 @@ public class UserHandler {
   private static Mono<ServerResponse> handleError(Throwable t, String message) {
     return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue("%s - %s".formatted(message, t.getMessage()));
+        .bodyValue(Map.of("error", message, "reason", t.getMessage()));
   }
 }
