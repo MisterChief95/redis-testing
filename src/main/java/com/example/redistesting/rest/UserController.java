@@ -39,11 +39,7 @@ public class UserController {
   public CompletableFuture<ResponseEntity<User>> get(@PathVariable String id) {
     return cacheRepository
         .getById(id)
-        .thenApply(
-            user ->
-                (!isNull(user))
-                    ? ResponseEntity.ok().body(user)
-                    : new ResponseEntity<>((User) null, HttpStatus.NO_CONTENT))
+        .thenApply(u -> new ResponseEntity<>(u, isNull(u) ? HttpStatus.NO_CONTENT : HttpStatus.OK))
         .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
@@ -51,7 +47,7 @@ public class UserController {
   public CompletableFuture<ResponseEntity<Boolean>> create(@RequestBody User user) {
     return cacheRepository
         .create(user)
-        .thenApply(isNewEntry -> new ResponseEntity<>(isNewEntry, HttpStatus.CREATED))
+        .thenApply(isNewEntry -> new ResponseEntity<>(isNewEntry, HttpStatus.OK))
         .completeOnTimeout(ResponseEntity.internalServerError().build(), TIMEOUT, MILLISECONDS);
   }
 
