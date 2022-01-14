@@ -2,18 +2,18 @@
 package com.example.redistesting.contract;
 
 import com.example.redistesting.model.User;
-import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface CacheRepository {
 
-  CompletableFuture<Collection<User>> getAll();
+  Flux<User> getAll();
 
-  CompletableFuture<User> getById(String id);
+  Mono<User> getById(String id);
 
-  CompletableFuture<Boolean> create(User user);
+  Mono<Boolean> create(User user);
 
-  CompletableFuture<Boolean> update(User user);
+  Mono<Boolean> update(User user);
 
-  CompletableFuture<Boolean> delete(String id);
+  Mono<Boolean> delete(String id);
 }
