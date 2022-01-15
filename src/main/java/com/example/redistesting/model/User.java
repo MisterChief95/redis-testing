@@ -23,11 +23,10 @@ public class User {
       throw new RuntimeException("Unable to parse IPv4 String", ex);
     }
 
-    if (builder.id.isBlank()) {
-      this.id = String.valueOf((firstName + lastName + age).hashCode());
-    } else {
-      this.id = builder.id;
-    }
+    this.id =
+        (builder.id.isBlank())
+            ? String.valueOf((firstName + lastName + age).hashCode())
+            : builder.id;
   }
 
   public String getId() {
