@@ -1,9 +1,7 @@
-/* (C)2022 Brendan Lackey */
 package com.example.redistesting.model;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 
 @JsonDeserialize(builder = User.Builder.class)
@@ -20,12 +18,15 @@ public class User {
     this.age = builder.age;
 
     try {
-      this.ipv4 = Inet4Address.getByName(builder.ipv4);
+      this.ipv4 = InetAddress.getByName(builder.ipv4);
     } catch (Exception ex) {
       throw new RuntimeException("Unable to parse IPv4 String", ex);
     }
 
-    this.id = String.valueOf((firstName + lastName + age).hashCode());
+    this.id =
+        (builder.id.isBlank())
+            ? String.valueOf((firstName + lastName + age).hashCode())
+            : builder.id;
   }
 
   public String getId() {

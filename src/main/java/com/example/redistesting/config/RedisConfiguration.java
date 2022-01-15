@@ -1,4 +1,3 @@
-/* (C)2022 Brendan Lackey */
 package com.example.redistesting.config;
 
 import com.example.redistesting.model.RedisProperties;

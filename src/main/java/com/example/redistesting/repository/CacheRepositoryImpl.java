@@ -1,4 +1,3 @@
-/* (C)2022 Brendan Lackey */
 package com.example.redistesting.repository;
 
 import com.example.redistesting.contract.CacheRepository;
@@ -7,12 +6,9 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class CacheRepositoryImpl implements CacheRepository {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CacheRepositoryImpl.class);
   private static final String USER_SET_KEY = "user_set";
 
   private final RedisAsyncCommands<String, User> commands;
