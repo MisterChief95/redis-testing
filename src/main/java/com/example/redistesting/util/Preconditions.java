@@ -1,12 +1,13 @@
+/* (C)2022 Brendan Lackey */
 package com.example.redistesting.util;
 
 public final class Preconditions {
 
-  public static String requireNotBlank(String string){
+  public static String requireNotBlank(String string) {
     return requireNotBlank(string, "string cannot be blank or null");
   }
 
-  public static String requireNotBlank(String string, String message){
+  public static String requireNotBlank(String string, String message) {
     if (string.isBlank()) {
       throw new IllegalArgumentException(message);
     }
@@ -23,5 +24,5 @@ public final class Preconditions {
     }
   }
 
-  private Preconditions(){}
+  private Preconditions() {}
 }
