@@ -1,4 +1,3 @@
-/* (C)2022 Brendan Lackey */
 package com.example.redistesting.rest;
 
 import static com.example.redistesting.util.Preconditions.checkArgument;

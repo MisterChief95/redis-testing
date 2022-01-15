@@ -1,4 +1,3 @@
-/* (C)2022 Brendan Lackey */
 package com.example.redistesting.repository;
 
 import com.example.redistesting.contract.CacheRepository;

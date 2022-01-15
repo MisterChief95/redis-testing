@@ -88,9 +88,6 @@
               <version>${google-java-format.version}</version>
               <reflowLongStrings>true</reflowLongStrings>
             </googleJavaFormat>
-            <licenseHeader>
-              <content>/* (C)$YEAR Brendan Lackey */</content>
-            </licenseHeader>
           </java>
         </configuration>
         <executions>
